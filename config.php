@@ -2,6 +2,8 @@
 
 define('DS',DIRECTORY_SEPARATOR);
 
+define('DEFAULT_LIMIT',10);
+
 $config = array(
     'host' => 'localhost',
     'user' => 'root',

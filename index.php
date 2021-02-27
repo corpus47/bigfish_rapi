@@ -9,5 +9,7 @@ require_once('core' . DS . 'restapi.php');
 
 $Players = new Players($config);
 
-var_dump($Players);
+$res = json_encode($Players->get());
+
+echo $res;
 ?>

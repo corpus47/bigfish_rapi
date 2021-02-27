@@ -9,5 +9,5 @@ require_once('core' . DS . 'restapi.php');
 
 $Players = new Players($config);
 
-var_dump(DS);
+var_dump($Players);
 ?>

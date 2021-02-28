@@ -6,6 +6,10 @@ require_once('..' . DIRECTORY_SEPARATOR . 'config.php');
 
 require_once('..' . DS . 'core' . DS . 'restapi.php');
 
+$api_key = new ApiKeys($config);
+
+var_dump($api_key->check_key('dgpfdgpkpogkd'));
+
 $get_rest = new Players($config);
 
 var_dump($get_rest->get());

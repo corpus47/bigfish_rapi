@@ -5,9 +5,18 @@ class ApiKeys extends PDO {
 
     private $table_name = NULL;
 
-    public function __construct() {
+    public function __construct($config = NULL) {
 
         $this->table_name = strtolower(get_class($this));
+
+        if($config == NULL) {
+
+            echo json_encode(array(
+                'Error' => 'Config is empty or missing',
+            ));
+
+            die();
+        }
 
         try {
 
@@ -42,7 +51,9 @@ class ApiKeys extends PDO {
 
             try {
 
-                $sql = "SELECT COUNT(`api_key`, `active`) FROM `" . $this->table_name . "` WHERE `api_key` = :apikey;";
+                $sql = "SELECT COUNT(`api_key`) AS total FROM `" . $this->table_name . "` WHERE `api_key` = :apikey AND `active` = 1";
+
+                var_dump($sql);
 
                 $sth = $this->prepare($sql);
 
@@ -50,7 +61,7 @@ class ApiKeys extends PDO {
 
                 $sth->execute();
 
-                if ($prepared->fetchColumn() == 1) {
+                if ($sth->fetchColumn() == 1) {
 
                     $result=true;
                     

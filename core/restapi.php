@@ -1,16 +1,32 @@
 <?php
 // RestAPI
 
+class ApiKeys extends PDO {
+
+    private $table_name = NULL;
+
+    public function __construct() {
+
+        $this->table_name = strtolower(get_class($this));
+
+
+    }
+}
+
 class Players extends PDO {
 
-    private $table_name = "players";
+    private $table_name = NULL;
 
 
     public function __construct( $config = NULL) {
 
+        $this->table_name = strtolower(get_class($this));
+
         if($config == NULL) {
 
-            echo json_encode(['Message' => "Config is empty or missing!"]);
+            echo json_encode(array(
+                'Error' => 'Config is empty or missing',
+            ));
 
             die();
         }
@@ -20,7 +36,11 @@ class Players extends PDO {
 
         } catch (PDOException $e) {
 
-            echo json_encode(['Message' => 'Db connection error: ' . $e->getMessage()]);
+            //echo json_encode(['Message' => 'Db connection error: ' . $e->getMessage()]);
+
+            echo json_encode(array(
+                'Error' => 'Db connection error: ' . $e->getMessage()
+            ));
 
             die();
         }
@@ -41,7 +61,9 @@ class Players extends PDO {
         $result["data"] = array();
 
         while($row = $sth->fetch(PDO::FETCH_ASSOC)){
+
             extract($row);
+
             $item = array(
                 "id" => $id,
                 "first_name" => $first_name,
@@ -53,8 +75,6 @@ class Players extends PDO {
             array_push($result["data"],$item);
 
         }
-
-        var_dump($result);
 
         if(count($result) < 1) {
 

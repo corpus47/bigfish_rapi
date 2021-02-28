@@ -11,4 +11,9 @@ $Players = new Players($config);
 $res = json_encode($Players->get());
 
 echo $res;
+
+/*
+    $salt = substr( md5(rand()), 0, 10);
+	$password = sha1($inserted['pwd-one']. $salt);
+*/
 ?>

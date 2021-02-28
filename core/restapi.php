@@ -9,8 +9,69 @@ class ApiKeys extends PDO {
 
         $this->table_name = strtolower(get_class($this));
 
+        try {
+
+            parent::__construct("mysql:host=localhost;dbname=" . $config['db'], $config['user'], $config['pwd'], array(PDO::MYSQL_ATTR_INIT_COMMAND =>  "SET NAMES UTF8"));
+
+        } catch (PDOException $e) {
+
+            echo json_encode(array(
+                'Error' => 'Db connection error: ' . $e->getMessage()
+            ));
+
+            die();
+        }
+
+        $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
 
     }
+
+    public function check_key($key = NULL) {
+
+            if($key == NULL) {
+
+                return false;
+
+            } else {
+
+                $key = htmlspecialchars(strip_tags($key));
+
+            }
+
+            try {
+
+                $sql = "SELECT COUNT(`api_key`, `active`) FROM `" . $this->table_name . "` WHERE `api_key` = :apikey;";
+
+                $sth = $this->prepare($sql);
+
+                $sth->bindParam(":apikey", $key);
+
+                $sth->execute();
+
+                if ($prepared->fetchColumn() == 1) {
+
+                    $result=true;
+                    
+                } else {
+
+                    $result=false;
+
+                }
+
+            } catch (PDOExeption $e) {
+
+                echo json_encode(array(
+                    'Error' => 'Db connection error: ' . $e->getMessage()
+                ));
+    
+                die();
+
+            }
+
+    }
+
 }
 
 class Players extends PDO {
@@ -35,8 +96,6 @@ class Players extends PDO {
             parent::__construct("mysql:host=localhost;dbname=" . $config['db'], $config['user'], $config['pwd'], array(PDO::MYSQL_ATTR_INIT_COMMAND =>  "SET NAMES UTF8"));
 
         } catch (PDOException $e) {
-
-            //echo json_encode(['Message' => 'Db connection error: ' . $e->getMessage()]);
 
             echo json_encode(array(
                 'Error' => 'Db connection error: ' . $e->getMessage()

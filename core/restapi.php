@@ -51,23 +51,25 @@ class ApiKeys extends PDO {
 
             try {
 
-                $sql = "SELECT COUNT(`api_key`) AS total FROM `" . $this->table_name . "` WHERE `api_key` = :apikey AND `active` = 1";
+                $sql = "SELECT * FROM `" . $this->table_name . "` WHERE `active` = 1";
 
-                var_dump($sql);
-
-                $sth = $this->prepare($sql);
-
-                $sth->bindParam(":apikey", $key);
-
+                $sth = $this->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                
                 $sth->execute();
+                
+                $ret = FALSE;
 
-                if ($sth->fetchColumn() == 1) {
+                while($row = $sth->fetch(PDO::FETCH_ASSOC)){
 
-                    $result=true;
-                    
-                } else {
+                    extract($row);
 
-                    $result=false;
+                    $salted = sha1($key . $salt);
+
+                    if($salted == $api_key) {
+
+                        $ret = TRUE;
+
+                    }
 
                 }
 
@@ -80,6 +82,8 @@ class ApiKeys extends PDO {
                 die();
 
             }
+
+            return $ret;
 
     }
 

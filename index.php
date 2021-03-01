@@ -23,7 +23,9 @@ echo 'Pw: ' . sha1($api_key. $salt);
 echo 'Pw2: ' . sha1($api_key. $salt);
 
 /*
-    $salt = substr( md5(rand()), 0, 10);
-	$password = sha1($inserted['pwd-one']. $salt);
+*    $salt = substr( md5(rand()), 0, 10);
+*	$password = sha1($inserted['pwd-one']. $salt);
+* Ez egy plusz sor
 */
+
 ?>
